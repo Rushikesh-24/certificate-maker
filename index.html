@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Create personalized certificates in your browser from a PDF template and spreadsheet."
+    />
+    <title>Certify — Certificate maker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="styles.css?v=5" />
+  </head>
+  <body>
+    <main class="app">
+      <div class="workspace">
+        <aside class="panel controls-panel" aria-label="Certificate settings">
+          <section class="step-section">
+            <label class="upload-card" for="pdfFile">
+              <span class="upload-icon pdf-icon" aria-hidden="true">PDF</span>
+              <span class="upload-copy">
+                <strong>Certificate template</strong>
+                <span id="pdfFileName">Choose a PDF file</span>
+              </span>
+              <span class="upload-action" aria-hidden="true">＋</span>
+              <input id="pdfFile" type="file" accept="application/pdf,.pdf" />
+            </label>
+
+            <label class="upload-card" for="sheetFile">
+              <span class="upload-icon sheet-icon" aria-hidden="true">CSV</span>
+              <span class="upload-copy">
+                <strong>Names spreadsheet</strong>
+                <span id="sheetFileName">Choose a CSV or Excel file</span>
+              </span>
+              <span class="upload-action" aria-hidden="true">＋</span>
+              <input id="sheetFile" type="file" accept=".csv,.xls,.xlsx,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+            </label>
+
+            <div class="field-group">
+              <label for="nameColumn">Which column has the names?</label>
+              <select id="nameColumn" disabled>
+                <option value="">Upload a spreadsheet first</option>
+              </select>
+              <div id="rowCount" class="field-hint">Use a header row for your column names.</div>
+            </div>
+          </section>
+
+          <section class="step-section style-section">
+            <div class="field-group">
+              <label for="fontFamily">Google Font</label>
+              <input id="fontFamily" type="text" list="googleFontOptions" value="Montserrat" autocomplete="off" />
+              <datalist id="googleFontOptions"></datalist>
+              <div id="fontHint" class="field-hint">Loading free Google Fonts…</div>
+            </div>
+
+            <div class="style-row">
+              <div class="field-group size-field">
+                <label for="fontSize">Font size <span class="unit-label">pt</span></label>
+                <div class="number-control">
+                  <button type="button" class="stepper" data-step="-1" aria-label="Decrease font size">−</button>
+                  <input id="fontSize" type="number" min="8" max="300" value="48" />
+                  <button type="button" class="stepper" data-step="1" aria-label="Increase font size">＋</button>
+                </div>
+              </div>
+              <div class="field-group color-field">
+                <label for="textColor">Text color</label>
+                <label class="color-picker" for="textColor">
+                  <input id="textColor" type="color" value="#263f38" />
+                  <span id="colorValue">#263F38</span>
+                </label>
+              </div>
+            </div>
+            <div class="field-group name-format-group">
+              <label for="titleCaseNames">Name format</label>
+              <label class="toggle-control" for="titleCaseNames">
+                <input id="titleCaseNames" type="checkbox" />
+                <span class="toggle-switch" aria-hidden="true"></span>
+                <span>Title Case <span class="toggle-detail">(off keeps original; e.g. Rushikesh Gaonkar)</span></span>
+              </label>
+            </div>
+            <div class="field-group page-group" id="pageGroup" hidden>
+              <label for="pageNumber">Place name on page</label>
+              <select id="pageNumber"></select>
+            </div>
+          </section>
+
+          <div class="generate-area">
+            <button id="generateButton" class="generate-button" type="button" disabled>
+              <span class="button-label">Create certificates</span>
+              <span class="button-arrow" aria-hidden="true">→</span>
+            </button>
+            <div id="statusMessage" class="status-message" role="status" aria-live="polite"></div>
+          </div>
+        </aside>
+
+        <section class="preview-panel" aria-label="Certificate preview">
+          <div class="preview-toolbar">
+            <span class="drag-hint"><span aria-hidden="true">↗</span> Drag the name to position</span>
+          </div>
+          <div id="emptyState" class="empty-state">
+            <div class="empty-illustration" aria-hidden="true">
+              <div class="illustration-sheet"></div>
+              <div class="illustration-line line-one"></div>
+              <div class="illustration-line line-two"></div>
+              <div class="illustration-seal">✳</div>
+              <div class="illustration-name"></div>
+            </div>
+          </div>
+          <div id="previewArea" class="preview-area" hidden>
+            <div id="pageFrame" class="page-frame">
+              <canvas id="pdfCanvas" aria-label="PDF template preview"></canvas>
+              <div id="nameOverlay" class="name-overlay" role="slider" aria-label="Certificate name placement" tabindex="0">
+                <span id="previewName">Your Name</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <footer class="privacy-note">No uploads. Files stay on your device.</footer>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
