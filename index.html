@@ -10,7 +10,7 @@
     <title>Certify — Certificate maker</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="styles.css?v=5" />
+    <link rel="stylesheet" href="styles.css?v=6" />
   </head>
   <body>
     <main class="app">
@@ -86,7 +86,8 @@
           </section>
 
           <div class="generate-area">
-            <button id="generateButton" class="generate-button" type="button" disabled>
+            <button id="generateButton" class="generate-button" type="button" aria-busy="false" disabled>
+              <span class="button-spinner" aria-hidden="true"></span>
               <span class="button-label">Create certificates</span>
               <span class="button-arrow" aria-hidden="true">→</span>
             </button>

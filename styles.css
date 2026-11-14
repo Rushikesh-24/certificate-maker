@@ -382,6 +382,37 @@ select {
   font-size: 16px;
 }
 
+.button-spinner {
+  display: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: button-spin 700ms linear infinite;
+}
+
+.generate-button[aria-busy="true"] .button-spinner {
+  display: inline-block;
+}
+
+.generate-button[aria-busy="true"] .button-arrow {
+  display: none;
+}
+
+@keyframes button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button-spinner {
+    animation: none;
+  }
+}
+
 .status-message {
   min-height: 0;
   margin-top: 8px;

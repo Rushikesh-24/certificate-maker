@@ -355,11 +355,13 @@
 
     const buttonLabel = elements.generateButton.querySelector(".button-label");
     elements.generateButton.disabled = true;
+    elements.generateButton.setAttribute("aria-busy", "true");
     buttonLabel.textContent = "Preparing certificates…";
     setStatus(`Preparing ${names.length} certificate${names.length === 1 ? "" : "s"}…`);
 
     try {
       await loadGoogleFont(elements.fontFamily.value);
+      buttonLabel.textContent = "Creating certificates…";
       const zip = new JSZip();
       const pageIndex = Number(elements.pageNumber.value || 1) - 1;
       const pageLabel = String(Number(elements.pageNumber.value || 1)).padStart(2, "0");
@@ -385,6 +387,7 @@
         setStatus(`Creating certificate ${index + 1} of ${names.length}…`);
       }
 
+      buttonLabel.textContent = "Packing ZIP…";
       const zipBlob = await zip.generateAsync({ type: "blob" });
       const link = document.createElement("a");
       const url = URL.createObjectURL(zipBlob);
@@ -398,6 +401,7 @@
       setStatus(error instanceof Error ? error.message : "We couldn't create the ZIP. Please try again.", true);
     } finally {
       buttonLabel.textContent = "Create certificates";
+      elements.generateButton.setAttribute("aria-busy", "false");
       updateGenerateButton();
     }
   }
