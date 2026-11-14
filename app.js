@@ -304,12 +304,32 @@
   }
 
   function getSafeFileName(value, index) {
-    const cleaned = value
-      .normalize("NFKD")
-      .replace(/[^\w.-]+/g, "_")
-      .replace(/^\.|^\-+|_+$/g, "")
-      .slice(0, 90);
-    return cleaned || `certificate_${String(index + 1).padStart(3, "0")}`;
+    const cleaned = Array.from(value
+      .normalize("NFC")
+      .replace(/[<>:"/\\|?*\u0000-\u001f\u007f]/g, "_")
+      .replace(/\s+/g, " ")
+      .trim()
+      .replace(/[. ]+$/g, ""))
+      .slice(0, 120)
+      .join("");
+    const name = cleaned || `certificate_${String(index + 1).padStart(3, "0")}`;
+    return /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(name)
+      ? `_${name}`
+      : name;
+  }
+
+  function getUniquePdfFileName(value, index, usedFileNames) {
+    const baseName = getSafeFileName(value, index);
+    let filename = `${baseName}.pdf`;
+    let copyNumber = 2;
+
+    while (usedFileNames.has(filename.toLowerCase())) {
+      filename = `${baseName} (${copyNumber}).pdf`;
+      copyNumber += 1;
+    }
+
+    usedFileNames.add(filename.toLowerCase());
+    return filename;
   }
 
   function hexToRgb(hex) {
@@ -364,7 +384,7 @@
       buttonLabel.textContent = "Creating certificates…";
       const zip = new JSZip();
       const pageIndex = Number(elements.pageNumber.value || 1) - 1;
-      const pageLabel = String(Number(elements.pageNumber.value || 1)).padStart(2, "0");
+      const usedFileNames = new Set();
 
       for (let index = 0; index < names.length; index += 1) {
         const pdfDoc = await PDFDocument.load(state.pdfBytes);
@@ -382,7 +402,7 @@
         });
 
         const pdfBytes = await pdfDoc.save();
-        const filename = `${String(index + 1).padStart(3, "0")}_${getSafeFileName(names[index], index)}_page-${pageLabel}.pdf`;
+        const filename = getUniquePdfFileName(names[index], index, usedFileNames);
         zip.file(filename, pdfBytes);
         setStatus(`Creating certificate ${index + 1} of ${names.length}…`);
       }

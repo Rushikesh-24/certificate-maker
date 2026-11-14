@@ -8,4 +8,4 @@ Serve this folder with any static file server (for example, `python3 -m http.ser
 
 The PDF and spreadsheet are processed locally in the browser. The app loads PDF.js, pdf-lib, SheetJS, and JSZip from cdnjs; Google Fonts are loaded from Google Fonts when selected. An internet connection is needed to load these libraries and fonts.
 
-The first worksheet is used, and the spreadsheet's first row must contain column headers. The name is placed on the selected PDF page. Output ZIPs contain one full PDF copy per non-empty selected-column cell.
+The first worksheet is used, and the spreadsheet's first row must contain column headers. The name is placed on the selected PDF page. Output ZIPs contain one full PDF copy per non-empty selected-column cell, named from that cell's value. Duplicate names receive a numbered suffix such as `Rushi Gaonkar (2).pdf`.
